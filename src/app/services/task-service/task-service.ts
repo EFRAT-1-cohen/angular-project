@@ -26,7 +26,7 @@ getTasksByProject(projectId:number){
 }
 
 postTask(task:CreateTaskRequest){
-    return this.httpClient.post<GetTasksResponse>(this.url + 'api/tasks', task).pipe(
+    return this.httpClient.post<GetTasksResponse>(this.url + '/api/tasks', task).pipe(
       tap(task => {
         const currentTasks = this.currentTasksBehivorSubject.getValue() || [];
         this.currentTasksBehivorSubject.next([...currentTasks, task]);
@@ -34,7 +34,7 @@ postTask(task:CreateTaskRequest){
     );
 }
 patchTask(taskId:number, task:UpdateTaskRequest){
-    return this.httpClient.patch<GetTasksResponse>(this.url + `api/tasks/${taskId}`, task).pipe(
+    return this.httpClient.patch<GetTasksResponse>(this.url + `/api/tasks/${taskId}`, task).pipe(
       tap(updatedTask => {
         const currentTasks = this.currentTasksBehivorSubject.getValue() || [];
         const updatedTasks = currentTasks.map(t => t.id === updatedTask.id ? updatedTask : t);
@@ -44,7 +44,7 @@ patchTask(taskId:number, task:UpdateTaskRequest){
 
 }
 deleteTask(taskId:number){
-    return this.httpClient.delete<void>(this.url + `api/tasks/${taskId}`).pipe(
+    return this.httpClient.delete<void>(this.url + `/api/tasks/${taskId}`).pipe(
       tap(() => {
         const currentTasks = this.currentTasksBehivorSubject.getValue() || [];
         const updatedTasks = currentTasks.filter(t => t.id !== taskId);
