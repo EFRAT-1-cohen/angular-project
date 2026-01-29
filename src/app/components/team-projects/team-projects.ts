@@ -24,7 +24,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     CommonModule,
     ReactiveFormsModule,
     AsyncPipe,
-    NgClass,
     RouterLink, 
     MatCardModule,
     MatIconModule,

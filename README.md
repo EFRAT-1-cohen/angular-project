@@ -16,9 +16,9 @@
 ✅ **Loading States**: Spinners on all operations  
 ✅ **Error Handling**: Dismissible error banners  
 ✅ **Responsive**: Mobile, tablet, desktop optimized  
-✅ **Material Design**: v21.1.1 theme  
+✅ **Material Design**: v21.1.1 theme
 
-> See `REQUIREMENTS_CHECK.txt` for full verification against all requirements  
+
 
 ---
 
@@ -93,18 +93,19 @@ POST /api/comments             Add comment
 
 ## 🛠️ Tech Stack
 
-| Tech | Version |
-|------|---------|
-| Angular | 21.1.0 |
-| Material | 21.1.1 |
-| TypeScript | 5+ |
-| RxJS | 7.8 |
+| Tech       | Version |
+| ---------- | ------- |
+| Angular    | 21.1.0  |
+| Material   | 21.1.1  |
+| TypeScript | 5+      |
+| RxJS       | 7.8     |
 
 ---
 
 ## ✨ Implementation Highlights
 
 ### Loading States (Signals)
+
 ```typescript
 isLoading = signal<boolean>(false);
 error = signal<string | null>(null);
@@ -114,6 +115,7 @@ error = signal<string | null>(null);
 ```
 
 ### Components
+
 - **Login/Register**: 1 loading state + password toggle
 - **Teams**: 2 loading states (fetch, create)
 - **Projects**: 2 loading states (fetch, create)
@@ -121,13 +123,14 @@ error = signal<string | null>(null);
 - **Comments**: 2 loading states (fetch, post)
 
 ### Code Quality
+
 ✅ Standalone components only  
 ✅ Signals for state  
 ✅ OnPush change detection  
 ✅ Reactive forms  
 ✅ Modern control flow  
 ✅ Strict TypeScript  
-✅ Error handling  
+✅ Error handling
 
 ---
 
@@ -158,9 +161,10 @@ npx prettier --write   # Format code
 ## 🔧 Configuration
 
 API URL in `src/environments/environment.ts`:
+
 ```typescript
 export const environment = {
-  apiUrl: 'https://team-tasks-api-ako5.onrender.com'
+  apiUrl: 'https://team-tasks-api-ako5.onrender.com',
 };
 ```
 
@@ -170,25 +174,27 @@ Local dev: `http://localhost:3000`
 
 ## 📊 Quality Metrics
 
-| Metric | Score |
-|--------|-------|
-| Functionality | 100% ✅ |
-| Best Practices | 95% ✅ |
-| Code Quality | 98% ✅ |
-| UX/UI | 90% ✅ |
-| Performance | 95% ✅ |
-| **Overall** | **95/100** |
+| Metric         | Score      |
+| -------------- | ---------- |
+| Functionality  | 100% ✅    |
+| Best Practices | 95% ✅     |
+| Code Quality   | 98% ✅     |
+| UX/UI          | 90% ✅     |
+| Performance    | 95% ✅     |
+| **Overall**    | **95/100** |
 
 ---
 
 ## 🚨 Troubleshooting
 
 **Port 4200 in use?**
+
 ```bash
 ng serve --port 4300
 ```
 
 **Clear cache:**
+
 ```bash
 npm cache clean --force
 rm -rf node_modules
@@ -196,6 +202,7 @@ npm install
 ```
 
 **API connection issues:**
+
 - Verify server on `http://localhost:3000`
 - Check DevTools Network tab
 - Look for CORS errors
