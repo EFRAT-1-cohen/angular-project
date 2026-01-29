@@ -27,8 +27,9 @@ export class TeamService {
 
   postTeams(teamData: NameTeamModel) {
     return this.httpClient.post<TeamsModel>(`${this.url}/api/teams`, teamData).pipe(
-      tap(() => {
-        this.getTeams().subscribe(); 
+      tap((newTeam) => {
+        const currentTeams = this.teamSubject.getValue() || [];
+        this.teamSubject.next([...currentTeams, newTeam]);
       })
     );
   }
