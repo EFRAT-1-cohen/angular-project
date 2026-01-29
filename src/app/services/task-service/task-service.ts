@@ -18,7 +18,6 @@ export class TaskService {
     this.currentTasks$ = this.currentTasksBehivorSubject; 
   }
 getTasksByProject(projectId:number){
-    this.currentTasksBehivorSubject.next([]);
     
     return this.httpClient.get<GetTasksResponse[]>(this.url + `/api/tasks?projectId=${projectId}`).pipe(
       tap((tasks) => {
