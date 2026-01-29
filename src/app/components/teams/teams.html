@@ -1,38 +1,66 @@
 <div class="teams-container">
   
-  <div class="create-team-section">
-    <h1>הצוותים שלי</h1>
-    <p class="subtitle">נהל את הפרויקטים והחברים במקום אחד</p>
-    
-    <form [formGroup]="form" (ngSubmit)="createNewTeam()" class="create-form">
-      <mat-form-field appearance="outline" class="custom-input">
-        <mat-label>שם הצוות החדש</mat-label>
-        <input matInput formControlName="name" placeholder="למשל: מחלקת שיווק">
-        <mat-icon matPrefix>work_outline</mat-icon>
-      </mat-form-field>
-      
-      <button mat-raised-button color="primary" type="submit" 
-              class="create-btn" [disabled]="form.invalid">
-        צור צוות
-        <mat-icon iconPositionEnd>add_circle</mat-icon>
+  <!-- Loading Spinner -->
+  @if (isLoadingTeams()) {
+    <div class="loading-spinner-center">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>טוען את הצוותים...</p>
+    </div>
+  }
+
+  <!-- Error Message -->
+  @if (error()) {
+    <div class="error-banner">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error() }}</span>
+      <button mat-icon-button (click)="error.set(null)">
+        <mat-icon>close</mat-icon>
       </button>
-    </form>
-  </div>
+    </div>
+  }
 
-  <div class="cards-grid">
-    @for (team of teams$ | async; track team.id) {
+  <!-- Main Content -->
+  @if (!isLoadingTeams()) {
+    <div class="create-team-section">
+      <h1>הצוותים שלי</h1>
+      <p class="subtitle">נהל את הפרויקטים והחברים במקום אחד</p>
       
-      <app-team-card 
-        [team]="team"
-        (addMember)="onAddMemberFromCard($event, team.id)"
-        (deleteTeam)="onDeleteTeam($event)">
-      </app-team-card>
+      <form [formGroup]="form" (ngSubmit)="createNewTeam()" class="create-form">
+        <mat-form-field appearance="outline" class="custom-input">
+          <mat-label>שם הצוות החדש</mat-label>
+          <input matInput formControlName="name" placeholder="למשל: מחלקת שיווק" 
+                 [disabled]="isCreatingTeam()">
+          <mat-icon matPrefix>work_outline</mat-icon>
+        </mat-form-field>
+        
+        <button mat-raised-button color="primary" type="submit" 
+                class="create-btn" 
+                [disabled]="form.invalid || isCreatingTeam()">
+          @if (!isCreatingTeam()) {
+            <ng-container>צור צוות</ng-container>
+            <mat-icon iconPositionEnd>add_circle</mat-icon>
+          } @else {
+            <ng-container>יוצר...</ng-container>
+          }
+        </button>
+      </form>
+    </div>
 
-    } @empty {
-      <div class="empty-state">
-        <mat-icon style="font-size: 48px; height: 48px;">sentiment_dissatisfied</mat-icon>
-        <p>עדיין אין לך צוותים. צור את הראשון למעלה!</p>
-      </div>
-    }
-  </div>
+    <div class="cards-grid">
+      @for (team of teams$ | async; track team.id) {
+        
+        <app-team-card 
+          [team]="team"
+          (addMember)="onAddMemberFromCard($event, team.id)"
+          (deleteTeam)="onDeleteTeam($event)">
+        </app-team-card>
+
+      } @empty {
+        <div class="empty-state">
+          <mat-icon style="font-size: 48px; height: 48px;">sentiment_dissatisfied</mat-icon>
+          <p>עדיין אין לך צוותים. צור את הראשון למעלה!</p>
+        </div>
+      }
+    </div>
+  }
 </div>

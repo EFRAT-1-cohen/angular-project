@@ -1,6 +1,5 @@
-
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../services/task-service/task-service';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe, CommonModule, DatePipe } from '@angular/common'; 
@@ -15,6 +14,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GetTasksResponse } from '../../models/task.model';
 
 @Component({
@@ -35,10 +35,11 @@ import { GetTasksResponse } from '../../models/task.model';
     MatMenuModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    RouterLink
-],
+    MatProgressSpinnerModule
+  ],
   templateUrl: './task-project.html',
   styleUrl: './task-project.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskProject {
 
@@ -46,11 +47,19 @@ export class TaskProject {
   private router = inject(Router);
   private taskService = inject(TaskService);
   private fb = inject(NonNullableFormBuilder);
+  
   task$ = this.taskService.currentTasks$;
   currentProjectId: number | null = null;
   currentTaskId: number | null = null;
-  isFormADDExpanded = false;
-  isEditing = false;
+
+  // Loading states
+  isLoadingTasks = signal<boolean>(false);
+  isCreatingTask = signal<boolean>(false);
+  isDeletingTask = signal<boolean>(false);
+  isUpdatingTask = signal<boolean>(false);
+  error = signal<string | null>(null);
+  isFormADDExpanded = signal<boolean>(false);
+  isEditing = signal<boolean>(false);
   
   taskForm = this.fb.group({
    title: ['', [Validators.required, Validators.minLength(2)]], 
@@ -69,93 +78,109 @@ export class TaskProject {
    assigneeId: [null as number | null],
    dueDate: [null as Date | null]
   });
-  
   ngOnInit() {
-   this.route.queryParamMap.subscribe(params => {
+    this.route.queryParamMap.subscribe(params => {
+      const idFromUrl = params.get('projectId');
+      this.currentProjectId = idFromUrl ? Number(idFromUrl) : 1;
+      this.loadTasks();
+    });
+  }
+
+  private loadTasks() {
+    if (!this.currentProjectId) return;
     
-    const idFromUrl = params.get('projectId');
-
-    this.currentProjectId = idFromUrl ? Number(idFromUrl) : 1;
-
-    this.taskService.getTasksByProject(this.currentProjectId).subscribe();
-  });
-}
-
-toggleAddForm() {
-  this.isFormADDExpanded = !this.isFormADDExpanded;
-  if (this.isFormADDExpanded) {
-    this.isEditing = false; 
-    this.taskForm.reset();
-  }
-}
-
-onEditClick(task: GetTasksResponse) {
-  this.isEditing = true;
-  this.isFormADDExpanded = true;
-  this.currentProjectId = task.project_id;
-  this.currentTaskId = task.id;
-  let dueDate: Date | null = null;
-  if (task.due_date) {
-    dueDate = new Date(task.due_date);
-  }
-  this.updateTaskForm.setValue({
-    title: task.title,
-    description: task.description || '',
-    status: task.status,
-    priority: task.priority,
-    assigneeId: task.assignee_id,
-    dueDate: dueDate  
-  });
-}
-
-onSubmitADD() {
-  if (this.taskForm.valid && this.currentProjectId) {
-    const formValue = this.taskForm.getRawValue();
-    let finalDueDate=null;
-    if (formValue.dueDate) {
-       const dateObj = new Date(formValue.dueDate); 
-       finalDueDate = dateObj.toISOString().split('T')[0];
-    }
-   const finalAssigneeId = formValue.assigneeId ? Number(formValue.assigneeId) : null;
-    const newTask = {
-  projectId: this.currentProjectId,
-  title: formValue.title,
-  description: formValue.description,
-  status: formValue.status  as 'todo' | 'in_progress' | 'done',
-  priority: formValue.priority as 'low' | 'normal' | 'high',
-  assigneeId: finalAssigneeId,
-  dueDate: finalDueDate,
-  orderIndex: 0
-};
-    this.taskService.postTask(newTask).subscribe({
+    this.isLoadingTasks.set(true);
+    this.error.set(null);
+    
+    this.taskService.getTasksByProject(this.currentProjectId).subscribe({
       next: () => {
-       
-        Swal.fire({
-          icon: 'success',
-          title: 'המשימה נוצרה!',
-          text: 'הוספנו את המשימה לרשימה בהצלחה',
-          timer: 1500, 
-          showConfirmButton: false
-        });
-        this.taskForm.reset();
-        this.isFormADDExpanded = false;
+        this.isLoadingTasks.set(false);
       },
       error: (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'אופס...',
-          text: 'משהו השתבש ביצירת המשימה. נסה שוב מאוחר יותר.',
-          confirmButtonText: 'הבנתי',
-          confirmButtonColor: '#d33'
-        });
+        this.isLoadingTasks.set(false);
+        this.error.set('לא ניתן לטעון את המשימות');
       }
     });
   }
-}
 
-onUpdateTask() {
-   if (this.updateTaskForm.valid && this.currentTaskId) { 
+  toggleAddForm() {
+    this.isFormADDExpanded.update(val => !val);
+    if (this.isFormADDExpanded()) {
+      this.isEditing.set(false); 
+      this.taskForm.reset();
+    }
+  }
+
+  onEditClick(task: GetTasksResponse) {
+    this.isEditing.set(true);
+    this.isFormADDExpanded.set(true);
+    this.currentProjectId = task.project_id;
+    this.currentTaskId = task.id;
+    let dueDate: Date | null = null;
+    if (task.due_date) {
+      dueDate = new Date(task.due_date);
+    }
+    this.updateTaskForm.setValue({
+      title: task.title,
+      description: task.description || '',
+      status: task.status,
+      priority: task.priority,
+      assigneeId: task.assignee_id,
+      dueDate: dueDate  
+    });
+  }
+
+  onSubmitADD() {
+    if (this.taskForm.valid && this.currentProjectId) {
+      this.isCreatingTask.set(true);
+      const formValue = this.taskForm.getRawValue();
+      let finalDueDate = null;
+      if (formValue.dueDate) {
+        const dateObj = new Date(formValue.dueDate); 
+        finalDueDate = dateObj.toISOString().split('T')[0];
+      }
+      const finalAssigneeId = formValue.assigneeId ? Number(formValue.assigneeId) : null;
+      const newTask = {
+        projectId: this.currentProjectId,
+        title: formValue.title,
+        description: formValue.description,
+        status: formValue.status  as 'todo' | 'in_progress' | 'done',
+        priority: formValue.priority as 'low' | 'normal' | 'high',
+        assigneeId: finalAssigneeId,
+        dueDate: finalDueDate,
+        orderIndex: 0
+      };
       
+      this.taskService.postTask(newTask).subscribe({
+        next: () => {
+          this.isCreatingTask.set(false);
+          Swal.fire({
+            icon: 'success',
+            title: 'המשימה נוצרה!',
+            text: 'הוספנו את המשימה לרשימה בהצלחה',
+            timer: 1500, 
+            showConfirmButton: false
+          });
+          this.taskForm.reset();
+          this.isFormADDExpanded.set(false);
+        },
+        error: (err) => {
+          this.isCreatingTask.set(false);
+          Swal.fire({
+            icon: 'error',
+            title: 'אופס...',
+            text: 'משהו השתבש ביצירת המשימה. נסה שוב מאוחר יותר.',
+            confirmButtonText: 'הבנתי',
+            confirmButtonColor: '#d33'
+          });
+        }
+      });
+    }
+  }
+
+  onUpdateTask() {
+    if (this.updateTaskForm.valid && this.currentTaskId) {
+      this.isUpdatingTask.set(true);
       const formValue = this.updateTaskForm.getRawValue();
       let dueDateString = '';
       if (formValue.dueDate) {
@@ -173,6 +198,7 @@ onUpdateTask() {
 
       this.taskService.patchTask(this.currentTaskId, updatedTask).subscribe({
         next: () => {
+          this.isUpdatingTask.set(false);
           Swal.fire({
             icon: 'success',
             title: 'המשימה עודכנה!',
@@ -184,6 +210,7 @@ onUpdateTask() {
           this.toggleAddForm();
         },
         error: (err) => {
+          this.isUpdatingTask.set(false);
           Swal.fire({
             icon: 'error',
             title: 'אופס...',
@@ -197,8 +224,10 @@ onUpdateTask() {
   }
   
   onSubmitDelete(taskId: number) {
+    this.isDeletingTask.set(true);
     this.taskService.deleteTask(taskId).subscribe({
       next: () => {
+        this.isDeletingTask.set(false);
         Swal.fire({
           icon: 'success',
           title: 'המשימה נמחקה!',
@@ -208,6 +237,7 @@ onUpdateTask() {
         });
       },
       error: (err) => {
+        this.isDeletingTask.set(false);
         Swal.fire({
           icon: 'error',
           title: 'אופס...',
@@ -217,7 +247,9 @@ onUpdateTask() {
         });
       }
     });
-}
-openComments(taskId: number) {
+  }
+
+  openComments(taskId: number) {
     this.router.navigate(['/comments'], { queryParams: { taskId: taskId } });
-  }}
+  }
+}

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms'; 
 import { AddMemberModel, NameTeamModel } from '../../models/teams.model';
@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-teams',
@@ -19,10 +20,12 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     ReactiveFormsModule,
     TeamCard, 
-    MatCardModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatIconModule
+    MatCardModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatIconModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './teams.html',
   styleUrl: './teams.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Teams implements OnInit {
   private teamsService = inject(TeamService);
@@ -32,14 +35,30 @@ export class Teams implements OnInit {
   teams$ = this.teamsService.team$;
   activeTeam: number | null = null;
   
+  // Loading states
+  isLoadingTeams = signal<boolean>(false);
+  isCreatingTeam = signal<boolean>(false);
+  error = signal<string | null>(null);
+  
   form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]]
   });
 
   ngOnInit() {
+    this.loadTeams();
+  }
+
+  private loadTeams() {
+    this.isLoadingTeams.set(true);
+    this.error.set(null);
+    
     this.teamsService.getTeams().subscribe({
-      next: () => {}, 
+      next: () => {
+        this.isLoadingTeams.set(false);
+      }, 
       error: (err) => {
+        this.isLoadingTeams.set(false);
+        this.error.set('לא ניתן לטעון את רשימת הצוותים');
         Swal.fire('שגיאת תקשורת', 'לא ניתן לטעון את רשימת הצוותים', 'error');
       }
     });
@@ -48,14 +67,17 @@ export class Teams implements OnInit {
   createNewTeam() {
     if (this.form.invalid) return;
     
+    this.isCreatingTeam.set(true);
     const newTeam: NameTeamModel = { name: this.form.getRawValue().name };
 
     this.teamsService.postTeams(newTeam).subscribe({
       next: () => {
+        this.isCreatingTeam.set(false);
         Swal.fire('מעולה', 'הצוות נוצר בהצלחה', 'success');
         this.form.reset();
       },
       error: (err) => {
+        this.isCreatingTeam.set(false);
         const msg = err.status === 409 ? 'שם הצוות כבר קיים' : 'לא ניתן ליצור צוות כרגע';
         Swal.fire('שגיאה', msg, 'error');
       }

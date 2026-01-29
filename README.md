@@ -2,6 +2,8 @@
 
 אפליקציית ניהול משימות וצוותים בפיתוח Angular מודרני עם Reactive Forms, Material Design ו-RxJS.
 
+**📊 Status:** ✅ **Ready for Production** (95/100 audit score)
+
 ## 📋 תקציר
 
 **Team Tasks App** היא פלטפורמה לניהול צוותים, פרויקטים, משימות והערות. המשתמשים יכולים:
@@ -35,6 +37,14 @@ npm start
 ```
 
 אפליקציה תפתח ב-`http://localhost:4200` עם Hot Module Replacement.
+
+## 📚 Documentation
+
+Important documentation files:
+
+- **[AUDIT_REPORT.md](./AUDIT_REPORT.md)** - Comprehensive code audit (95/100 score)
+- **[TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md)** - QA testing checklist
+- **[LOADING_STATES_GUIDE.md](./LOADING_STATES_GUIDE.md)** - Loading states implementation guide
 
 ## 📁 מבנה הפרויקט
 

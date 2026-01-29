@@ -20,6 +20,79 @@
   padding: 2rem;
 }
 
+/* --- Loading Spinner Overlay --- */
+.loading-spinner-center {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  gap: 1.5rem;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.loading-spinner-center p {
+  color: var(--text-main);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* --- Error Banner --- */
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: #ffebee;
+  border-left: 4px solid #d32f2f;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  color: #d32f2f;
+  animation: slideDown 0.3s ease-out;
+}
+
+.error-banner mat-icon {
+  flex-shrink: 0;
+}
+
+.error-banner span {
+  flex: 1;
+  font-weight: 500;
+}
+
+.error-banner button {
+  flex-shrink: 0;
+  color: #d32f2f;
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* --- כותרת --- */
 .dashboard-header {
   display: flex;

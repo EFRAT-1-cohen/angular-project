@@ -1,7 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe, NgClass, CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
@@ -21,6 +21,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   selector: 'app-team-projects',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     AsyncPipe,
     NgClass,
@@ -38,6 +39,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   ],
   templateUrl: './team-projects.html',
   styleUrl: './team-projects.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TeamProjects implements OnInit {
   private route = inject(ActivatedRoute);
@@ -47,25 +49,46 @@ export class TeamProjects implements OnInit {
   project$ = this.projectService.project$;
   currentTeamId: number | null = null;
 
-  isFormExpanded = false;
+  // Loading states
+  isLoadingProjects = signal<boolean>(false);
+  isCreatingProject = signal<boolean>(false);
+  error = signal<string | null>(null);
+  isFormExpanded = signal<boolean>(false);
 
   projectForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]], 
     description: ['', [Validators.maxLength(500)]]
   });
 
-
- ngOnInit() {
+  ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params['teamId']) {
         this.currentTeamId = Number(params['teamId']);
-        this.projectService.getProjectsByTeam(this.currentTeamId).subscribe();
+        this.loadProjects();
       }
     });
   }
+
+  private loadProjects() {
+    this.isLoadingProjects.set(true);
+    this.error.set(null);
+    
+    if (this.currentTeamId) {
+      this.projectService.getProjectsByTeam(this.currentTeamId).subscribe({
+        next: () => {
+          this.isLoadingProjects.set(false);
+        },
+        error: (err) => {
+          this.isLoadingProjects.set(false);
+          this.error.set('לא ניתן לטעון את הפרויקטים');
+        }
+      });
+    }
+  }
+
   toggleForm() {
-    this.isFormExpanded = !this.isFormExpanded;
-    if (!this.isFormExpanded) {
+    this.isFormExpanded.update(val => !val);
+    if (!this.isFormExpanded()) {
       this.projectForm.reset();
     }
   }
@@ -86,6 +109,7 @@ export class TeamProjects implements OnInit {
       return;
     }
 
+    this.isCreatingProject.set(true);
     const newProjectData: CreateProjectModel = {
       teamId: this.currentTeamId,
       name: this.projectForm.getRawValue().name || '',
@@ -94,27 +118,22 @@ export class TeamProjects implements OnInit {
 
     this.projectService.postProject(newProjectData).subscribe({
       next: () => {
+        this.isCreatingProject.set(false);
         Swal.fire({
           icon: 'success',
           title: 'הפרויקט נוצר בהצלחה!',
           toast: true,
-          position: 'bottom-start',
+          position: 'top-end',
           showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          background: '#d4edda',
-          color: '#155724'
+          timer: 3000
         });
         this.projectForm.reset();
-        this.isFormExpanded = false;
+        this.isFormExpanded.set(false);
       },
-      error: () => {
-        Swal.fire({
-          title: 'אופס...',
-          text: 'לא הצלחנו ליצור את הפרויקט. נסה שוב.',
-          icon: 'error',
-          confirmButtonColor: '#dc3545'
-        });
+      error: (err) => {
+        this.isCreatingProject.set(false);
+        const msg = err.error?.message || 'לא ניתן ליצור פרויקט כרגע';
+        Swal.fire('שגיאה', msg, 'error');
       }
     });
   }

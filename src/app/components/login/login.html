@@ -1,4 +1,12 @@
 <div class="auth-wrapper">
+  <!-- Loading Overlay -->
+  @if (isLoading()) {
+    <div class="loading-overlay">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p class="loading-text">מתחבר למערכת...</p>
+    </div>
+  }
+
   <mat-card class="glass-card">
     
     <mat-card-header class="auth-header">
@@ -11,25 +19,42 @@
         
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>אימייל</mat-label>
-          <input matInput formControlName="email" type="email" placeholder="user@example.com">
+          <input matInput formControlName="email" type="email" placeholder="user@example.com" [disabled]="isLoading()">
           <mat-icon matSuffix>email</mat-icon>
-          @if (form.controls.email.invalid) {
+          @if (form.controls.email.invalid && form.controls.email.touched) {
             <mat-error>יש להזין כתובת אימייל תקינה</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>סיסמה</mat-label>
-          <input matInput formControlName="password" type="password">
-          <mat-icon matSuffix>lock</mat-icon>
-          @if (form.controls.password.invalid) {
+          <input matInput 
+            formControlName="password" 
+            [type]="hidePassword() ? 'password' : 'text'"
+            [disabled]="isLoading()">
+          <button mat-icon-button 
+            matSuffix 
+            (click)="togglePasswordVisibility()" 
+            type="button"
+            [disabled]="isLoading()">
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.controls.password.invalid && form.controls.password.touched) {
             <mat-error>סיסמה חייבת להכיל לפחות 6 תווים</mat-error>
           }
         </mat-form-field>
 
         <div class="actions">
-          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
-            התחבר למערכת
+          <button mat-raised-button 
+            color="primary" 
+            type="submit" 
+            [disabled]="form.invalid || isLoading()"
+            [class.loading]="isLoading()">
+            @if (!isLoading()) {
+              <span>התחבר למערכת</span>
+            } @else {
+              <span>מתחבר...</span>
+            }
           </button>
         </div>
 
@@ -38,7 +63,7 @@
 
     <mat-card-footer class="auth-footer">
       <span>אין לך עדיין חשבון?</span>
-      <a routerLink="/register" mat-button color="accent">הירשם כאן</a>
+      <a routerLink="/register" mat-button color="accent" [disabled]="isLoading()">הירשם כאן</a>
     </mat-card-footer>
 
   </mat-card>

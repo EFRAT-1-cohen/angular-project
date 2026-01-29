@@ -4,44 +4,72 @@
     <h3>💬 תגובות למשימה</h3>
   </div>
 
-  @if (comments$ | async; as comments) {
-    
-    <div class="messages-area" #scrollContainer>
-      
-      @for (comment of comments; track comment.id) {
-        
-        <div class="message-wrapper" 
-             [ngClass]="comment.user_id === currentUserId ? 'my-message' : 'other-message'">
-          
-          @if (comment.user_id !== currentUserId) {
-            <div class="sender-name">{{ comment.author_name }}</div>
-          }
-
-          <div class="bubble">
-            {{ comment.body }}
-            <span class="timestamp">{{ comment.created_at | date:'HH:mm' }}</span>
-          </div>
-          
-        </div>
-
-      } @empty {
-        <div class="empty-state">
-          <mat-icon>chat_bubble_outline</mat-icon>
-          <p>אין עדיין תגובות. היה הראשון להגיב!</p>
-        </div>
-      }
-
+  <!-- Loading Spinner -->
+  @if (isLoadingComments()) {
+    <div class="loading-spinner-center">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>טוען תגובות...</p>
     </div>
+  }
 
+  <!-- Error Banner -->
+  @if (error()) {
+    <div class="error-banner">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error() }}</span>
+      <button mat-icon-button (click)="error.set(null)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  }
+
+  <!-- Messages Area -->
+  @if (!isLoadingComments()) {
+    @if (comments$ | async; as comments) {
+      
+      <div class="messages-area" #scrollContainer>
+        
+        @for (comment of comments; track comment.id) {
+          
+          <div class="message-wrapper" 
+               [ngClass]="comment.user_id === currentUserId ? 'my-message' : 'other-message'">
+            
+            @if (comment.user_id !== currentUserId) {
+              <div class="sender-name">{{ comment.author_name }}</div>
+            }
+
+            <div class="bubble">
+              {{ comment.body }}
+              <span class="timestamp">{{ comment.created_at | date:'HH:mm' }}</span>
+            </div>
+            
+          </div>
+
+        } @empty {
+          <div class="empty-state">
+            <mat-icon>chat_bubble_outline</mat-icon>
+            <p>אין עדיין תגובות. היה הראשון להגיב!</p>
+          </div>
+        }
+
+      </div>
+
+    }
   }
 
   <div class="input-area">
     <mat-form-field appearance="outline" class="full-width">
       <input matInput [formControl]="commentControl" 
              placeholder="כתוב תגובה..." 
-             (keydown.enter)="sendMessage()">
-      <button mat-icon-button matSuffix (click)="sendMessage()" [disabled]="!commentControl.value">
-        <mat-icon color="primary">send</mat-icon>
+             (keydown.enter)="sendMessage()"
+             [disabled]="isPostingComment() || isLoadingComments()">
+      <button mat-icon-button matSuffix (click)="sendMessage()" 
+              [disabled]="!commentControl.value || isPostingComment() || isLoadingComments()">
+        @if (isPostingComment()) {
+          <mat-icon>schedule</mat-icon>
+        } @else {
+          <mat-icon color="primary">send</mat-icon>
+        }
       </button>
     </mat-form-field>
   </div>

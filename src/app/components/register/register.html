@@ -1,4 +1,12 @@
 <div class="auth-wrapper register-bg">
+  <!-- Loading Overlay -->
+  @if (isLoading()) {
+    <div class="loading-overlay">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p class="loading-text">יוצר חשבון...</p>
+    </div>
+  }
+
   <mat-card class="glass-card">
     
     <mat-card-header class="auth-header">
@@ -11,34 +19,50 @@
         
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>שם מלא</mat-label>
-          <input matInput formControlName="name" placeholder="ישראל ישראלי">
+          <input matInput formControlName="name" placeholder="ישראל ישראלי" [disabled]="isLoading()">
           <mat-icon matSuffix>person</mat-icon>
-          @if (form.controls.name.invalid) {
+          @if (form.controls.name.invalid && form.controls.name.touched) {
             <mat-error>נא להזין שם מלא (מינימום 2 תווים)</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>אימייל</mat-label>
-          <input matInput formControlName="email" type="email">
+          <input matInput formControlName="email" type="email" [disabled]="isLoading()">
           <mat-icon matSuffix>email</mat-icon>
-          @if (form.controls.email.invalid) {
+          @if (form.controls.email.invalid && form.controls.email.touched) {
             <mat-error>אימייל לא תקין</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>סיסמה</mat-label>
-          <input matInput formControlName="password" type="password">
-          <mat-icon matSuffix>lock</mat-icon>
-          @if (form.controls.password.invalid) {
+          <input matInput 
+            formControlName="password" 
+            [type]="hidePassword() ? 'password' : 'text'"
+            [disabled]="isLoading()">
+          <button mat-icon-button 
+            matSuffix 
+            (click)="togglePasswordVisibility()" 
+            type="button"
+            [disabled]="isLoading()">
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.controls.password.invalid && form.controls.password.touched) {
             <mat-error>מינימום 6 תווים</mat-error>
           }
         </mat-form-field>
 
         <div class="actions">
-          <button mat-raised-button color="accent" type="submit" [disabled]="form.invalid">
-            הירשם עכשיו
+          <button mat-raised-button 
+            color="accent" 
+            type="submit" 
+            [disabled]="form.invalid || isLoading()">
+            @if (!isLoading()) {
+              <span>הירשם עכשיו</span>
+            } @else {
+              <span>יוצר חשבון...</span>
+            }
           </button>
         </div>
 
@@ -47,7 +71,7 @@
 
     <mat-card-footer class="auth-footer">
       <span>כבר רשום למערכת?</span>
-      <a routerLink="/login" mat-button color="primary">התחבר</a>
+      <a routerLink="/login" mat-button color="primary" [disabled]="isLoading()">התחבר</a>
     </mat-card-footer>
 
   </mat-card>

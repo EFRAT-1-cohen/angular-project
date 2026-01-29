@@ -6,18 +6,67 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
+  position: relative;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.3s ease-in;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* אפקט הזכוכית (Glassmorphism) */
 .glass-card {
   width: 100%;
   max-width: 400px;
-  background: rgba(255, 255, 255, 0.9) !important; /* לבן חצי שקוף */
-  backdrop-filter: blur(10px); /* טשטוש הרקע מאחור */
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
   border-radius: 20px !important;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   border: 1px solid rgba(255, 255, 255, 0.18);
   padding: 2rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  box-shadow: 0 8px 40px 0 rgba(31, 38, 135, 0.5);
 }
 
 /* טיפוגרפיה */
@@ -36,16 +85,21 @@ mat-card-title {
   margin-bottom: 0.5rem !important;
 }
 
+mat-card-subtitle {
+  color: #666;
+  font-size: 0.95rem !important;
+}
+
 /* סידור השדות */
 .full-width {
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .actions {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 button[type="submit"] {
@@ -53,7 +107,40 @@ button[type="submit"] {
   padding: 1.5rem !important;
   font-size: 1.1rem;
   border-radius: 12px !important;
-  background: linear-gradient(45deg, #667eea, #764ba2); /* כפתור גרדיאנט */
+  background: linear-gradient(45deg, #667eea, #764ba2) !important;
+  color: white !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+button[type="submit"]:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Form Field Styling */
+mat-form-field {
+  display: block;
+}
+
+::ng-deep {
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+
+  .mat-mdc-form-field-hint {
+    color: var(--mat-sys-on-surface-variant) !important;
+  }
+
+  .mat-mdc-form-field-error {
+    color: var(--mat-sys-error) !important;
+    font-size: 0.85rem;
+  }
 }
 
 .auth-footer {
@@ -63,4 +150,32 @@ button[type="submit"] {
   justify-content: center;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+.auth-footer a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .glass-card {
+    max-width: 100%;
+    padding: 1.5rem 1rem;
+  }
+
+  mat-card-title {
+    font-size: 1.5rem !important;
+  }
+
+  button[type="submit"] {
+    padding: 1.2rem !important;
+    font-size: 1rem;
+  }
 }
