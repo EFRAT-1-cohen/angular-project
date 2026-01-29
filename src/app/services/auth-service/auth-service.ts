@@ -3,12 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs'; 
 import { tap } from 'rxjs/operators'; 
 import { AuthLoginModel, AuthModel, AuthResponseModel, UserModel } from '../../models/auth.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private url = 'http://localhost:3000';
+  private url = environment.apiUrl;
   private httpClient = inject(HttpClient);
   
   private userSubject = new BehaviorSubject<UserModel | null>(null);

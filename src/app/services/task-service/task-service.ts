@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { CreateTaskRequest, GetTasksResponse, UpdateTaskRequest } from '../../models/task.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
-  private url = 'http://localhost:3000/';
+  private url = environment.apiUrl;
   private httpClient = inject(HttpClient);
   public currentTasks$ : Observable<GetTasksResponse[]|null>;
   private currentTasksBehivorSubject : BehaviorSubject<GetTasksResponse[]|null> = new BehaviorSubject<GetTasksResponse[]|null>([]);
@@ -16,7 +18,7 @@ export class TaskService {
     this.currentTasks$ = this.currentTasksBehivorSubject; 
   }
 getTasksByProject(projectId:number){
-    return this.httpClient.get<GetTasksResponse[]>(this.url + `api/tasks?projectId=${projectId}`).pipe(
+    return this.httpClient.get<GetTasksResponse[]>(this.url + `/api/tasks?projectId=${projectId}`).pipe(
       tap((tasks) => {
         this.currentTasksBehivorSubject.next(tasks);
       })

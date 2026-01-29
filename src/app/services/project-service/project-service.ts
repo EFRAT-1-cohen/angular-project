@@ -3,12 +3,13 @@ import { UserModel } from '../../models/auth.model';
 import { BehaviorSubject, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CreateProjectModel, ProjectModel } from '../../models/projects.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
-  private url = 'http://localhost:3000';
+  private url = environment.apiUrl;
   private httpClient=inject(HttpClient);
   private projectSubject = new BehaviorSubject<ProjectModel[] | null>(null);
   public project$ = this.projectSubject.asObservable();

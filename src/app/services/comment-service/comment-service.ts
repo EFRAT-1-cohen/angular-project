@@ -2,12 +2,13 @@ import { inject, Injectable } from '@angular/core';
 import { CommentModel, PostCommentModel } from '../../models/comment.model';
 import { BehaviorSubject, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommentService {
-  private url = 'http://localhost:3000';
+ private url = environment.apiUrl;
   private httpClient=inject(HttpClient);
   private commentSubject = new BehaviorSubject<CommentModel[] | null>(null);
   public comment$ = this.commentSubject.asObservable();

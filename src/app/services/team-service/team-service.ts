@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
 import { AddMemberModel, NameTeamModel, TeamsModel } from '../../models/teams.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TeamService {
-  private url = 'http://localhost:3000';
+ private url = environment.apiUrl;
   private httpClient = inject(HttpClient);
 
   private teamSubject = new BehaviorSubject<TeamsModel[] | null>(null);
