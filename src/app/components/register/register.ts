@@ -21,8 +21,8 @@ import Swal from 'sweetalert2';
     MatIconModule,
     MatFormFieldModule
   ],
-  templateUrl: './Register.html',
-  styleUrl: './Register.css',
+ templateUrl: './register.html',
+  styleUrl: './register.css',
 })
 export class Register {
   private fb=inject(NonNullableFormBuilder);
