@@ -35,7 +35,6 @@ export class Teams implements OnInit {
   teams$ = this.teamsService.team$;
   activeTeam: number | null = null;
   
-  // Loading states
   isLoadingTeams = signal<boolean>(false);
   isCreatingTeam = signal<boolean>(false);
   error = signal<string | null>(null);

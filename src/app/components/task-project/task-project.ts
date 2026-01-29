@@ -52,7 +52,6 @@ export class TaskProject {
   currentProjectId: number | null = null;
   currentTaskId: number | null = null;
 
-  // Loading states
   isLoadingTasks = signal<boolean>(false);
   isCreatingTask = signal<boolean>(false);
   isDeletingTask = signal<boolean>(false);

@@ -35,7 +35,6 @@ export class Login {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  // Loading state
   isLoading = signal<boolean>(false);
   hidePassword = signal<boolean>(true);
 

@@ -34,7 +34,6 @@ export class Register {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  // Loading state
   isLoading = signal<boolean>(false);
   hidePassword = signal<boolean>(true);
   hideConfirmPassword = signal<boolean>(true);

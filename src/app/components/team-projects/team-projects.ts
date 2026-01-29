@@ -48,7 +48,6 @@ export class TeamProjects implements OnInit {
   project$ = this.projectService.project$;
   currentTeamId: number | null = null;
 
-  // Loading states
   isLoadingProjects = signal<boolean>(false);
   isCreatingProject = signal<boolean>(false);
   error = signal<string | null>(null);

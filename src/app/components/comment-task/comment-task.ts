@@ -33,7 +33,6 @@ export class CommentTask implements OnInit {
   
   currentUserId: number | null = null;
   
-  // Loading state signals
   isLoadingComments = signal<boolean>(false);
   isPostingComment = signal<boolean>(false);
   error = signal<string | null>(null);
