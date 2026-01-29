@@ -1,0 +1,21 @@
+<header class="app-header" *ngIf="currentUser">
+  <div class="header-content">
+    <button 
+      *ngIf="showBackButton" 
+      class="back-button" 
+      (click)="goBack()" 
+      aria-label="חזרה">
+      <span class="back-icon">←</span>
+      חזרה
+    </button>
+    
+    <div class="spacer" *ngIf="!showBackButton"></div>
+    
+    <div class="user-info">
+      <span class="greeting">שלום {{ currentUser.name }}</span>
+      <button class="logout-button" (click)="logout()">
+        התנתק
+      </button>
+    </div>
+  </div>
+</header>

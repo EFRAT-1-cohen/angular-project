@@ -1,0 +1,59 @@
+<mat-card class="team-card">
+  <mat-card-content class="card-content">
+    
+    <div class="card-header-content">
+      <div class="avatar-circle">
+        <mat-icon>groups</mat-icon>
+      </div>
+      
+      <div class="header-text">
+        <h3 class="team-title">{{ team().name }}</h3>
+        <div class="team-meta">
+          <mat-icon>person</mat-icon>
+          <span>{{ team().members_count || 0 }} חברים</span>
+        </div>
+      </div>
+
+      <button mat-icon-button 
+        class="delete-btn-header"
+        (click)="onDeleteTeam()"
+        matTooltip="מחק צוות">
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+    </div>
+
+    @if (isFormOpen) {
+      <div class="inline-form">
+        <mat-form-field appearance="outline" class="full-width-input">
+          <mat-label>הקלד מזהה משתמש (ID)</mat-label>
+          <input matInput [formControl]="memberControl" type="number" placeholder="למשל: 102">
+        </mat-form-field>
+        
+        <div class="form-row">
+          <button mat-flat-button color="primary" class="flex-btn" 
+                  (click)="onsubmit()" [disabled]="memberControl.invalid">
+            הוסף
+          </button>
+          <button mat-stroked-button (click)="toggleForm()">
+            ביטול
+          </button>
+        </div>
+      </div>
+    } @else {
+      <button mat-stroked-button color="primary" class="add-member-btn" (click)="toggleForm()">
+        <mat-icon>person_add</mat-icon>
+        צרף חבר חדש
+      </button>
+    }
+
+  </mat-card-content>
+
+  <div class="card-actions">
+    <span class="date-text">נוצר ב- {{ team().created_at | date:'shortDate' }}</span>
+    <button mat-button color="accent" 
+        [routerLink]="['/projects']" 
+        [queryParams]="{ teamId: team().id }">
+       לפרויקטים <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+    </button>
+  </div>
+</mat-card>

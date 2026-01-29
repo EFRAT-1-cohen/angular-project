@@ -1,0 +1,123 @@
+/* Card Container */
+.team-card {
+  overflow: hidden; /* מונע גלישה לא רצויה */
+  transition: box-shadow 0.3s ease;
+  border-radius: 12px; /* עיגול פינות מודרני יותר */
+}
+
+.team-card:hover {
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1); /* אפקט ריחוף עדין */
+}
+
+.card-content {
+  padding: 24px;
+}
+
+/* Header Layout */
+.card-header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.avatar-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0; /* מונע מהאווטאר להתכווץ */
+}
+
+.avatar-circle mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.header-text {
+  flex: 1; /* לוקח את כל המקום הפנוי ודוחף את כפתור המחיקה לקצה */
+  overflow: hidden; /* למקרה של טקסט ארוך */
+}
+
+.team-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* שלוש נקודות אם הטקסט ארוך מדי */
+}
+
+.team-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #7f8c8d;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* Delete Button Styling */
+/* שיניתי את השם שיתאים ל-HTML */
+.delete-btn-header {
+  color: #95a5a6;
+  transition: all 0.2s ease;
+}
+
+.delete-btn-header:hover {
+  color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.1);
+  transform: scale(1.1);
+}
+
+/* Form Styles */
+.inline-form {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #edf2f7; /* מסגרת עדינה */
+}
+
+.full-width-input {
+  width: 100%;
+  font-size: 14px;
+}
+
+.form-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.flex-btn {
+  flex: 1;
+}
+
+.add-member-btn {
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 8px;
+  padding: 6px 0;
+}
+
+/* Footer Actions */
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-top: 1px solid #ecf0f1;
+  background-color: #fafbfc;
+}
+
+.date-text {
+  font-size: 12px;
+  color: #aaa;
+}

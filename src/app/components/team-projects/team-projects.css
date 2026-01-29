@@ -1,0 +1,245 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: #f8f9fc; /* רקע כללי רך */
+  font-family: 'Segoe UI', sans-serif;
+  --primary: #4361ee;
+  --secondary: #3f37c9;
+  --accent: #4cc9f0;
+  --text-main: #2b2d42;
+  --text-light: #8d99ae;
+}
+
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* --- Header Styling --- */
+.glass-header {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon-box {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 8px 16px rgba(67, 97, 238, 0.3);
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.add-btn {
+  background-color: var(--primary) !important;
+  border-radius: 12px !important;
+  padding: 1.2rem 1.5rem !important;
+  transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+}
+
+.rotate-icon {
+  transition: transform 0.3s ease;
+}
+
+.rotate-icon.open {
+  transform: rotate(45deg);
+}
+
+/* --- Form Animation Section --- */
+.form-section {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.form-section.expanded {
+  max-height: 600px; /* מספיק גובה לטופס */
+  opacity: 1;
+  transform: translateY(0);
+  margin-bottom: 2rem;
+  padding: 4px; /* מקום לצללית */
+}
+
+.form-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid #edf2f7;
+}
+
+.form-header h3 {
+  margin-top: 0;
+  color: var(--text-main);
+}
+
+.inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.input-wrapper label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+/* התאמת אינפוטים של מטריאל */
+.custom-field {
+  width: 100%;
+}
+
+.mat-mdc-form-field-subscript-wrapper {
+  display: none; /* מסתיר רווחים מיותרים אם רוצים עיצוב צפוף */
+}
+
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* --- Projects Grid --- */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.neo-card {
+  border-radius: 20px !important;
+  background: white;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.neo-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+}
+
+.card-status-strip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--primary), var(--accent));
+}
+
+.avatar-box {
+  background-color: #edf2ff;
+  color: var(--primary);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.more-btn {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  color: var(--text-light);
+}
+
+.desc-text {
+  color: #64748b;
+  line-height: 1.6;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 4.8em; /* שומר על גובה אחיד */
+}
+
+.meta-tags {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 20px;
+  color: #64748b;
+}
+
+.tag mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.card-actions {
+  margin-top: auto;
+  padding: 16px !important;
+  border-top: 1px solid #f8fafc;
+  text-align: left; /* כפתור בצד שמאל */
+}
+
+.action-btn {
+  border-radius: 10px !important;
+  color: var(--primary) !important;
+  font-weight: 600 !important;
+}

@@ -1,0 +1,38 @@
+<div class="teams-container">
+  
+  <div class="create-team-section">
+    <h1>הצוותים שלי</h1>
+    <p class="subtitle">נהל את הפרויקטים והחברים במקום אחד</p>
+    
+    <form [formGroup]="form" (ngSubmit)="createNewTeam()" class="create-form">
+      <mat-form-field appearance="outline" class="custom-input">
+        <mat-label>שם הצוות החדש</mat-label>
+        <input matInput formControlName="name" placeholder="למשל: מחלקת שיווק">
+        <mat-icon matPrefix>work_outline</mat-icon>
+      </mat-form-field>
+      
+      <button mat-raised-button color="primary" type="submit" 
+              class="create-btn" [disabled]="form.invalid">
+        צור צוות
+        <mat-icon iconPositionEnd>add_circle</mat-icon>
+      </button>
+    </form>
+  </div>
+
+  <div class="cards-grid">
+    @for (team of teams$ | async; track team.id) {
+      
+      <app-team-card 
+        [team]="team"
+        (addMember)="onAddMemberFromCard($event, team.id)"
+        (deleteTeam)="onDeleteTeam($event)">
+      </app-team-card>
+
+    } @empty {
+      <div class="empty-state">
+        <mat-icon style="font-size: 48px; height: 48px;">sentiment_dissatisfied</mat-icon>
+        <p>עדיין אין לך צוותים. צור את הראשון למעלה!</p>
+      </div>
+    }
+  </div>
+</div>
