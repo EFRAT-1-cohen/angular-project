@@ -118,14 +118,14 @@ onSubmitADD() {
     }
    const finalAssigneeId = formValue.assigneeId ? Number(formValue.assigneeId) : null;
     const newTask = {
-  project_id: this.currentProjectId,
+  projectId: this.currentProjectId,
   title: formValue.title,
   description: formValue.description,
   status: formValue.status  as 'todo' | 'in_progress' | 'done',
   priority: formValue.priority as 'low' | 'normal' | 'high',
-  assignee_id: finalAssigneeId,
-  due_date: finalDueDate,
-  order_index: 0
+  assigneeId: finalAssigneeId,
+  dueDate: finalDueDate,
+  orderIndex: 0
 };
     this.taskService.postTask(newTask).subscribe({
       next: () => {

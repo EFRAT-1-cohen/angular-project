@@ -12,14 +12,14 @@ export class GetTasksResponse {
   updated_at: string;
 }
 export class CreateTaskRequest {
-  project_id: number;          
+  projectId: number;          
   title: string;
   description?: string;
   status?: 'todo' | 'in_progress' | 'done';
   priority?: 'low' | 'normal' | 'high';
-  assignee_id?: number | null; 
-  due_date?: string | null;    
-  order_index?: number;         
+  assigneeId?: number | null; 
+  dueDate?: string | null;    
+  orderIndex?: number;         
 }
 export class UpdateTaskRequest {
   title?: string;
