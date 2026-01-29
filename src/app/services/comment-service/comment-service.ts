@@ -14,6 +14,9 @@ export class CommentService {
   public comment$ = this.commentSubject.asObservable();
   constructor() {}
   getCommentsByTaskId(taskId: number) {
+    // נקה את התגובות הישנות לפני טעינה של משימה חדשה
+    this.commentSubject.next([]);
+    
     return this.httpClient
       .get<CommentModel[]>(this.url + `/api/comments?taskId=${taskId}`).pipe(
         tap((comments) => {

@@ -4,7 +4,6 @@
     <h3>💬 תגובות למשימה</h3>
   </div>
 
-  <!-- Loading Spinner -->
   @if (isLoadingComments()) {
     <div class="loading-spinner-center">
       <mat-spinner diameter="40"></mat-spinner>
@@ -12,7 +11,6 @@
     </div>
   }
 
-  <!-- Error Banner -->
   @if (error()) {
     <div class="error-banner">
       <mat-icon>error_outline</mat-icon>
@@ -23,7 +21,6 @@
     </div>
   }
 
-  <!-- Messages Area -->
   @if (!isLoadingComments()) {
     @if (comments$ | async; as comments) {
       

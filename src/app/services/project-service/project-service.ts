@@ -21,6 +21,8 @@ export class ProjectService {
     )
   }
   getProjectsByTeam(teamId: number){
+    this.projectSubject.next([]);
+    
     return this.httpClient.get<ProjectModel[]>(`${this.url}/api/projects?teamId=${teamId}`).pipe(
       tap((projects)=>{this.projectSubject.next(projects);})
     )

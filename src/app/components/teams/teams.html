@@ -1,6 +1,5 @@
 <div class="teams-container">
   
-  <!-- Loading Spinner -->
   @if (isLoadingTeams()) {
     <div class="loading-spinner-center">
       <mat-spinner diameter="60"></mat-spinner>
@@ -8,7 +7,6 @@
     </div>
   }
 
-  <!-- Error Message -->
   @if (error()) {
     <div class="error-banner">
       <mat-icon>error_outline</mat-icon>
@@ -19,7 +17,6 @@
     </div>
   }
 
-  <!-- Main Content -->
   @if (!isLoadingTeams()) {
     <div class="create-team-section">
       <h1>הצוותים שלי</h1>
