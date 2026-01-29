@@ -42,6 +42,7 @@ npm start
 
 Important documentation files:
 
+- **[PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md)** - Executive summary & final status
 - **[AUDIT_REPORT.md](./AUDIT_REPORT.md)** - Comprehensive code audit (95/100 score)
 - **[TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md)** - QA testing checklist
 - **[LOADING_STATES_GUIDE.md](./LOADING_STATES_GUIDE.md)** - Loading states implementation guide
