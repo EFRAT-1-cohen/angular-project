@@ -5,6 +5,7 @@ import { Teams } from './components/teams/teams';
 import { TeamProjects } from './components/team-projects/team-projects';
 import { TaskProject } from './components/task-project/task-project';
 import { CommentTask } from './components/comment-task/comment-task';
+import { NotFound } from './components/not-found/not-found';
 import { authGuard } from './guards/auth.guard';
 
 
@@ -17,5 +18,6 @@ export const routes: Routes = [
   { path: 'projects', component: TeamProjects, canActivate: [authGuard] },
   { path: 'tasks', component: TaskProject, canActivate: [authGuard] },
   { path: 'comments', component: CommentTask, canActivate: [authGuard] },
-  { path: '**', redirectTo: 'teams' }
+  { path: '404', component: NotFound },
+  { path: '**', component: NotFound }
 ];

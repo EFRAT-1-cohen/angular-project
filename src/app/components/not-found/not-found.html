@@ -1,0 +1,35 @@
+<div class="error-container">
+  <div class="error-content">
+    <!-- Big 404 Icon -->
+    <div class="error-icon">
+      <mat-icon>error_outline</mat-icon>
+    </div>
+
+    <!-- 404 Text -->
+    <h1 class="error-code">404</h1>
+    
+    <!-- Error Message -->
+    <h2 class="error-title">עמוד לא נמצא</h2>
+    <p class="error-message">
+      סליחה, העמוד שחיפשת אינו קיים או הוסר.
+    </p>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="goHome()">
+        <mat-icon>home</mat-icon>
+        חזור לעמוד הבית
+      </button>
+      
+      <button mat-stroked-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        חזור לעמוד הקודם
+      </button>
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="decorative">
+      <mat-icon class="floating-icon">sentiment_dissatisfied</mat-icon>
+    </div>
+  </div>
+</div>
